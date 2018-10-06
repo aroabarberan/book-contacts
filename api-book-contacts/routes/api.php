@@ -1,5 +1,6 @@
 <?php
 
+use App\Contact;
 use Illuminate\Http\Request;
 
 /*
@@ -18,11 +19,24 @@ Route::get('/public', function (Request $request) {
 });
 
 Route::post('/private', function (Request $request) {
-    return response()->json(["message" => "Hello from a private endpoint! You need to have a valid access token to see this."]);
+    if ($request['sub'] !== null) {
+        $results = DB::select('select * from contacts where user = :user', ['user' => $request['sub']]);
+        return response()->json(["message" => $results]);
+    }
+    // return response()->json(["message" => "Hello from a private endpoint! You need to have a valid access token to see this." . $request['sub']]);
 })->middleware('jwt');
 
 Route::get('/private-scoped', function (Request $request) {
     return response()->json([
-        "message" => "Hello from a private endpoint! You need to have a valid access token and a scope of read:messages to see this." . $request['sub']
+        "message" => "Hello from a private endpoint! You need to have a valid access token and a scope of read:messages to see this."
     ]);
 })->middleware('check.scope:read:messages');
+
+Route::post('/contacts', function(Request $request) {
+    $contact = new Contact;
+    $contact->user = $request['sub'];
+    $contact->name = $request['name'];
+    $contact->phone = $request['phone'];
+    $contact->save();
+    return "Contact created correctly";
+})->middleware('jwt');
