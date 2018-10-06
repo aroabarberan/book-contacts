@@ -77,6 +77,17 @@ class App extends Component {
                   </Button>
               )
             }
+            {
+              isAuthenticated() && (
+                <Button
+                  bsStyle="primary"
+                  className="btn-margin"
+                  onClick={this.goTo.bind(this, 'createContact')}
+                >
+                  CreateContact
+                  </Button>
+              )
+            }
           </Navbar.Header>
         </Navbar>
         <div className="container">

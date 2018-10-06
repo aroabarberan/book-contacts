@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from "react";
 
-class GetContact extends Component {
+class CreateContact extends React.Component {
   constructor() {
     super()
     // this.state = {
-    //   // profile: {},
+    //   profile: {},
     //   contacts: [{
     //     user: '',
     //     name: '',
@@ -21,12 +21,10 @@ class GetContact extends Component {
       getProfile((err, profile) => {
         this.setState({ profile });
       });
-
     } else {
       this.setState({ profile: userProfile });
     }
   }
-
   handleChange(evt) {
     this.setState({ [evt.target.name]: evt.target.value })
   }
@@ -38,23 +36,9 @@ class GetContact extends Component {
   }
 
   render() {
-    const { getAccessToken } = this.props.auth;
-
-    fetch('http://127.0.0.1:3010/api/private',
-      {
-        method: "POST",
-        headers: {
-          'Accept': 'application/json',
-          'Content-type': 'application/json',
-          'Authorization': 'Bearer ' + getAccessToken(),
-        },
-        body: JSON.stringify({ sub: this.state.profile.sub }),
-      })
-      .then(res => res.text())
-      .then(console.log)
-
     return (
       <div>
+        <h2>Create Contact</h2>
         <form onSubmit={this.submit}>
           <div>
             <label>Name</label>
@@ -66,9 +50,17 @@ class GetContact extends Component {
           </div>
           <button>Send</button>
         </form>
+        {/* <div>
+          {this.state.friends.map((f, i) =>
+            <div key={i}>
+              <p>Name: {f.name}</p>
+              <p>Last name: {f.last_name}</p>
+              <p>Phone: {f.phone}</p>
+            </div>
+          )}
+        </div> */}
       </div>
-    );
+    )
   }
 }
-
-export default GetContact;
+export default CreateContact;

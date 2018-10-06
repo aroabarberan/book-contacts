@@ -4,13 +4,14 @@ import App from './App';
 import Home from './Home/Home';
 import Profile from './Profile/Profile';
 import GetContact from './GetContact/GetContact';
+import CreateContact from './CreateContact/CreateContact';
 import Callback from './Callback/Callback';
 import Auth from './Auth/Auth';
 import history from './history';
 
 const auth = new Auth();
 
-const handleAuthentication = ({location}) => {
+const handleAuthentication = ({ location }) => {
   if (/access_token|id_token|error/.test(location.hash)) {
     auth.handleAuthentication();
   }
@@ -19,28 +20,31 @@ const handleAuthentication = ({location}) => {
 export const makeMainRoutes = () => {
   return (
     <Router history={history}>
-        <div>
-          <Route path="/" render={(props) => <App auth={auth} {...props} />} />
-          <Route path="/home" render={(props) => <Home auth={auth} {...props} />} />
-          <Route path="/profile" render={(props) => (
-            !auth.isAuthenticated() ? (
-              <Redirect to="/home"/>
-            ) : (
+      <div>
+        <Route path="/" render={(props) => <App auth={auth} {...props} />} />
+        <Route path="/home" render={(props) => <Home auth={auth} {...props} />} />
+        <Route path="/profile" render={(props) => (
+          !auth.isAuthenticated() ? (
+            <Redirect to="/home" />
+          ) : (
               <Profile auth={auth} {...props} />
             )
-          )} />
-          <Route path="/callback" render={(props) => {
-            handleAuthentication(props);
-            return <Callback {...props} /> 
-          }}/>
-          <Route path="/getContact" render={(props) => (
-            !auth.isAuthenticated() ? (
-              <Redirect to="/home"/>
-            ) : (
+        )} />
+        <Route path="/callback" render={(props) => {
+          handleAuthentication(props);
+          return <Callback {...props} />
+        }} />
+        <Route path="/getContact" render={(props) => (
+          !auth.isAuthenticated() ? (
+            <Redirect to="/home" />
+          ) : (
               <GetContact auth={auth} {...props} />
             )
-          )} />      
-        </div>
-      </Router>
+        )} />
+        <Route path="/createContact" render={(props) => (
+          !auth.isAuthenticated() ? (<Redirect to="/home" />) : (<CreateContact auth={auth} {...props} />)
+        )} />
+      </div>
+    </Router>
   );
 }
