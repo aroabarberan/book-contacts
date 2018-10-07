@@ -1,16 +1,15 @@
-import React from "react";
+import React, { Component } from 'react';
 
-class CreateContact extends React.Component {
+class GetContact extends Component {
   constructor() {
     super()
-    // this.state = {
-    //   profile: {},
-    //   contacts: [{
-    //     user: '',
-    //     name: '',
-    //     phone: ''
-    //   }]
-    // }
+    this.state = {
+      contacts: [{
+        user: '',
+        name: '',
+        phone: ''
+      }]
+    }
     this.handleChange = this.handleChange.bind(this)
     this.submit = this.submit.bind(this)
   }
@@ -21,24 +20,40 @@ class CreateContact extends React.Component {
       getProfile((err, profile) => {
         this.setState({ profile });
       });
+
     } else {
       this.setState({ profile: userProfile });
     }
   }
+
   handleChange(evt) {
     this.setState({ [evt.target.name]: evt.target.value })
   }
 
   submit(evt) {
     evt.preventDefault();
-    const { name, phone } = this.state;
+    const { name, phone } = this.state
+    const sub = this.state.profile.sub
+    const { getAccessToken } = this.props.auth;
+
+    fetch('http://127.0.0.1:3010/api/contacts', {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+        'Authorization': 'Bearer ' + getAccessToken(),
+      },
+      body: JSON.stringify({ sub, name, phone }),
+    })
+      .then(res => res.text())
+      .then(console.log)
+
     this.setState(({ contacts }) => ({ contacts: [...contacts, { name, phone }] }));
   }
 
   render() {
     return (
       <div>
-        <h2>Create Contact</h2>
         <form onSubmit={this.submit}>
           <div>
             <label>Name</label>
@@ -50,17 +65,9 @@ class CreateContact extends React.Component {
           </div>
           <button>Send</button>
         </form>
-        {/* <div>
-          {this.state.friends.map((f, i) =>
-            <div key={i}>
-              <p>Name: {f.name}</p>
-              <p>Last name: {f.last_name}</p>
-              <p>Phone: {f.phone}</p>
-            </div>
-          )}
-        </div> */}
       </div>
-    )
+    );
   }
 }
-export default CreateContact;
+
+export default GetContact;
