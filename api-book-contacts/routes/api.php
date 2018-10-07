@@ -21,7 +21,7 @@ Route::get('/public', function (Request $request) {
 Route::post('/private', function (Request $request) {
     if ($request['sub'] !== null) {
         $results = DB::select('select * from contacts where user = :user', ['user' => $request['sub']]);
-        return response()->json(["message" => $results]);
+        return response()->json($results);
     }
     // return response()->json(["message" => "Hello from a private endpoint! You need to have a valid access token to see this." . $request['sub']]);
 })->middleware('jwt');
