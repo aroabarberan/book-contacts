@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { addContact } from "../Actions/ContactAction";
 
+const url_getContact = 'http://192.168.1.163:3010/api/private'
 
 class GetContact extends Component {
 
@@ -14,7 +15,7 @@ class GetContact extends Component {
         this.setState({ profile });
         const { getAccessToken } = this.props.auth;
 
-        fetch('http://127.0.0.1:3010/api/private',
+        fetch(url_getContact,
           {
             method: "POST",
             headers: {

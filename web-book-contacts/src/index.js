@@ -6,11 +6,6 @@ import store from "./store";
 
 const routes = makeMainRoutes();
 
-// ReactDOM.render(
-//   routes,
-//   document.getElementById('root')
-// );
-
 ReactDOM.render(
   <Provider store={store}>
     {routes}
